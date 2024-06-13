@@ -20,10 +20,10 @@ Then chose the lab you want to work on
 
 ## Labs
 
-- [Lab 1](lab1/readme.md)
-- [Lab 2](lab2/readme.md)
-- [Lab 3](lab3/readme.md)
+- [Lab 1](lab1/)
+- [Lab 2](lab2/)
+- [Lab 3](lab3/)
 
 ## Project
 
-- [Project](project/readme.md)
+- [Project](project/)
