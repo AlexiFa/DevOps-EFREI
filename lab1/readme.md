@@ -1,4 +1,3 @@
-
 # Lab 1 - Gitlab pipeline
 
 ![Lab 1 instructions](../images/lab1.png)
@@ -19,27 +18,14 @@
   - [ ] Build a VM to deploy the app
   - [ ] Customize your pipeline to build/test on the runner and deploy on the final VM
 
-## Requirements
-
-Windows:
-
-- Vagrant
-- Virtualbox
-
 ## Installation
 
 ### Configuration
 
-Cloner le projet
-
-```bash
-git clone ...
-```
-
 Start VM
 
 ```bash
-cd nom_du_projet
+cd lab1
 vagrant up
 vagrant ssh
 ```
