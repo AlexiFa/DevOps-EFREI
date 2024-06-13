@@ -1,38 +1,64 @@
-# Titre du projet
 
-# Description
-Description du projet
+# Lab 1 - Gitlab pipeline
 
-# Requirements
+![Lab 1 instructions](../images/lab1.png)
+
+## Objectives
+
+- [x] Setup your team tools
+- [x] Install Gitlab (with docker)
+- [ ] Find a web application
+- [ ] Configure a pipeline
+- [ ] Improve your network configuration
+  - [x] Add synchronized directories between the host and the VM
+  - [x] Configure port forwarding (ssh, http)
+  - [x] Connect to the VM with ssh client
+  - [ ] Trigger a pipeline with a curl from host and a second VM
+- [ ] Improve yout components in order to move forward
+  - [ ] Build a second docker and register as a runner
+  - [ ] Build a VM to deploy the app
+  - [ ] Customize your pipeline to build/test on the runner and deploy on the final VM
+
+## Requirements
+
 Windows:
+
 - Vagrant
 - Virtualbox
 
-# Installation
+## Installation
+
+### Configuration
+
 Cloner le projet
+
 ```bash
 git clone ...
 ```
+
 Start VM
-```bash	
+
+```bash
 cd nom_du_projet
 vagrant up
 vagrant ssh
 ```
+
 Start gitlab and gitlab-runner with docker compose
-```bash	
+
+```bash
 cd /vagrant_data
 sudo docker compose up
 ```
-Wait for the gitlab to boot on http://localhost:8080 
 
-Login into gitlab with root and the password given by the following command
+Wait for the gitlab to boot on <http://localhost:8080/>
+
+Login into gitlab with ```root``` and the password given by the following command
+
 ```bash
 sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 ```
-In the gitlab UI, change the password of the root user and create a new repository for exemple 'test-app'
-# Utilisation
-Procédure d'utilisation
 
-# Licence
-Licence du projet
+In the gitlab UI, change the password of the root user and create a new repository for example "test-app".
+
+***The configuration steps need to be done once since you don't destroy the VM***
