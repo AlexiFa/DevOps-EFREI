@@ -1,0 +1,23 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ee:latest
+    container_name: gitlab
+    hostname: gitlab.example.com
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+      - '2222:22'
+    volumes:
+      - '/srv/gitlab/config:/etc/gitlab'
+      - '/srv/gitlab/logs:/var/log/gitlab'
+      - '/srv/gitlab/data:/var/opt/gitlab'
+
+  # runner:
+  #   image: gitlab/gitlab-runner:latest
+  #   container_name: runner
+  #   restart: always
+  #   volumes:
+  #     - '/srv/gitlab-runner/config:/etc/gitlab-runner'
+  #     - '/var/run/docker.sock:/var/run/docker.sock'
+
