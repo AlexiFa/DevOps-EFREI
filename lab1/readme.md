@@ -20,7 +20,7 @@
 
 ## Installation
 
-### Configuration
+### Configuration password and repository
 
 Start VM
 
@@ -48,3 +48,31 @@ sudo docker exec -it gitlab grep 'Password:' /etc/gitlab/initial_root_password
 In the gitlab UI, change the password of the root user and create a new repository for example "test-app".
 
 ***The configuration steps need to be done once since you don't destroy the VM***
+
+### Configuration deploy container
+
+<!-- ### Configuration runner
+
+get the ip address of the docker containers
+
+```bash
+sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' gitlab
+```
+
+```bash
+sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' runner
+```
+
+register the runner
+
+```bash
+sudo docker exec -it runner gitlab-runner register --url http://ip-gitlab-container:80 --token <token>
+```
+
+then enter the info asked -->
+
+## TODO
+
+register as a runner the gitlab docker
+run the pipeline on a docker created by the ci/cd
+run the first pipeline

@@ -1,0 +1,34 @@
+stages:
+  - build
+  - install
+  - test
+  - deploy
+
+# cache:
+#   paths:
+#     - node_modules/
+
+build-job:
+  stage: build
+  script:
+    - echo "hello, build"
+
+install-job:
+  stage: install
+  script:
+    # - npm install
+    - echo "helloe"
+
+test-job:
+  stage: test
+  script:
+    # - npm test
+    - echo "test"
+  # dependencies:
+  #   - install-job
+
+deploy-prod:
+  stage: deploy
+  script:
+    - echo "thins stage deploy something"
+  environment: production
