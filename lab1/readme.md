@@ -58,17 +58,13 @@ sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}
 ```
 
 ```bash
-sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' gitlab-runner
+sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' runner
 ```
 
 register the runner
 
 ```bash
-sudo docker run --rm -it -v gitlab-runner-config:/etc/gitlab-runner gitlab/gitlab-runner register
+sudo docker exec -it runner gitlab-runner register --url http://ip-gitlab-container:80 --token <token>
 ```
 
 then enter the info asked
-
-```bash
-Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/): # the ip address of the gitlab container
-Please enter the gitlab-ci token for this runner: # get the token in the gitlab UI (admin area -> runners -> ... next to instance runner)
