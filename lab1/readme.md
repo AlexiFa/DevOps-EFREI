@@ -49,7 +49,9 @@ In the gitlab UI, change the password of the root user and create a new reposito
 
 ***The configuration steps need to be done once since you don't destroy the VM***
 
-### Configuration runner
+### Configuration deploy container
+
+<!-- ### Configuration runner
 
 get the ip address of the docker containers
 
@@ -67,4 +69,10 @@ register the runner
 sudo docker exec -it runner gitlab-runner register --url http://ip-gitlab-container:80 --token <token>
 ```
 
-then enter the info asked
+then enter the info asked -->
+
+## TODO
+
+register as a runner the gitlab docker
+run the pipeline on a docker created by the ci/cd
+run the first pipeline
