@@ -155,9 +155,9 @@ deploy:
     script:
         - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa 
         - chmod 600 ~/.ssh/id_rsa
-        - ssh-keyscan -H ec2-13-36-37-239.eu-west-3.compute.amazonaws.com >> ~/.ssh/known_hosts
+        - ssh-keyscan -H ec2-13-39-243-212.eu-west-3.compute.amazonaws.com >> ~/.ssh/known_hosts
         - chmod 644 ~/.ssh/known_hosts
-        - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@{DNS public} "
+        - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@ec2-13-39-243-212.eu-west-3.compute.amazonaws.com "
           sudo apt-get update &&
           sudo apt-get install -y docker.io &&
           sudo echo $REGISTRY_USER && echo $REGISTRY_PASS &&
