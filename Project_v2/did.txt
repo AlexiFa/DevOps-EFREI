@@ -1,0 +1,126 @@
+Ce que j'ai fait :
+
+créé un réseau docker "gitlab_default" dans lequel j'ai mis le runner
+j'ai mis dans hosts de VM 10.0.2.15 gitlab.example.com
+
+à voir si je suis obligé de faire les étapes host
+
+git remote set-url origin http://gitlab.example.com/root/devops_project.git
+git push --all origin
+
+git push -u origin master
+
+===================================================================
+
+docker exec -it gitlab-runner gitlab-runner register \
+  --non-interactive \
+  --url http://gitlab.example.com \
+  --registration-token DzmBihnXFQzP9wu4m6if \
+  --tag-list "pythonapp" \
+  --executor docker \
+  --docker-image python:3.9-slim-buster \
+  --docker-network-mode gitlab_default
+
+docker exec -it gitlab-runner gitlab-runner register \
+  --url http://gitlab.example.com \   
+  --registration-token DzmBihnXFQzP9wu4m6if \   
+  --tag-list "dockerapp" \   
+  --executor docker \   
+  --docker-image docker:26.1 \   
+  --docker-network-mode gitlab_default \ 
+  --docker-privileged true \ 
+  --docker-volumes "/certs/client" \
+
+
+docker exec -it gitlab-runner gitlab-runner register \
+  --url http://gitlab.example.com \   
+  --registration-token DzmBihnXFQzP9wu4m6if \   
+  --tag-list "shellapp" \   
+  --executor shell \
+  --docker-network-mode gitlab_default \
+  
+
+===================================================================
+
+variables:
+    IMAGE_NAME: julesdavoust/devops_project
+    IMAGE_TAG: pythonapp-1.0
+
+stages:
+    - test
+    - build
+
+run_tests:
+    stage: test
+    tags:
+        - pythonrunner
+    before_script:
+        - apt-get update && apt-get install make
+    script:
+        - make test
+
+build_image:
+    stage: build
+    tags:
+        - dockerrunner
+    before_script:
+        - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+    script:
+        - docker build . -t $IMAGE_NAME:$IMAGE_TAG
+        - docker push $IMAGE_NAME:$IMAGE_TAG
+
+=================================================================
+
+variables:
+    IMAGE_NAME: julesdavoust/devops_project
+    IMAGE_TAG: pythonapp-1.1
+
+stages:
+    - test
+    - build
+    - deploy
+
+run_test:
+    stage: test
+    tags:
+        - pythonapp
+    before_script:
+        - apt-get update && apt-get install -y make
+    script:
+        - make test
+
+
+build_image:
+    stage: build
+    services:
+        - name: docker:26.1-dind
+          alias: docker
+    tags:
+        - dockerapp
+    variables:
+        DOCKER_HOST: tcp://docker:2375
+        DOCKER_TLS_CERTDIR: ""
+    before_script:
+        - docker info
+        - echo "$REGISTRY_PASS" | docker login --username "$REGISTRY_USER" --password-stdin
+    script:
+        - docker build . -t $IMAGE_NAME:$IMAGE_TAG
+        - docker push $IMAGE_NAME:$IMAGE_TAG
+
+deploy:
+    stage: deploy
+    tags:
+        - shellapp
+    script:
+        - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa 
+        - chmod 600 ~/.ssh/id_rsa
+        - ssh-keyscan -H ec2-13-36-37-239.eu-west-3.compute.amazonaws.com >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@ec2-13-36-37-239.eu-west-3.compute.amazonaws.com "
+          sudo apt-get update && 
+          sudo apt-get install -y docker.io &&
+          sudo echo $REGISTRY_USER && echo $REGISTRY_PASS &&
+          sudo docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
+          sudo docker ps -aq | xargs -r docker stop && sudo docker ps -aq | xargs -r docker rm &&
+          sudo docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
+

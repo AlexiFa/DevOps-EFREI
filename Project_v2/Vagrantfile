@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/ubuntu2310"
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "6012"
+    vb.cpus = 4
+  end
+
+  config.vm.network "forwarded_port", guest: 80, host: 80
+
+  config.vm.synced_folder "./data", "/vagrant_data"
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo apt-get update
+    sudo wget -O get-docker.sh https://get.docker.com/
+    sudo sh get-docker.sh
+    sudo mkdir -p /srv/gitlab
+    # sudo mkdir -p /srv/gitlab-runner
+    # cd /vagrant_data
+    # sudo docker compose up -d
+  SHELL
+end
