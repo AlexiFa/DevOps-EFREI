@@ -157,7 +157,6 @@ build_image:
         - docker info
         - echo "$REGISTRY_PASS" | docker login --username "$REGISTRY_USER" --password-stdin
     script:
-        - cd build
         - docker build . -t $IMAGE_NAME:$IMAGE_TAG
         - docker push $IMAGE_NAME:$IMAGE_TAG
 
