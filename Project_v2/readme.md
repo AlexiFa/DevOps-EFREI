@@ -169,6 +169,6 @@ deploy:
 
 =======================================================================
 
-When your pipeline has finished executing, connect to: {public IPv4 address of the EC2 VM}:5000
+When your pipeline has finished executing, connect to: 13.39.243.212:5000
 
 ***The configuration steps need to be done once since you don't destroy the VM***
