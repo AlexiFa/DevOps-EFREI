@@ -194,9 +194,13 @@ gygnGQKBgA7Oz0uzE0tqS9iVUnrof1ECknaTPlQCfx2JEAUo52FhAekv8LFLGOxh
 vUe7I/CYmT9yn3zV3hWBpgvblV762koEmaQ7i29UPNHUd4KLuma1
 -----END RSA PRIVATE KEY-----" ~/.ssh/id_rsa 
         - chmod 600 ~/.ssh/id_rsa
+<<<<<<< HEAD
         - ssh-keyscan -H {DNS public} >> ~/.ssh/known_hosts
+=======
+        - ssh-keyscan -H ec2-13-39-243-212.eu-west-3.compute.amazonaws.com >> ~/.ssh/known_hosts
+>>>>>>> 6d258a3ccd180a190f559a0b16d72a89a08f6a57
         - chmod 644 ~/.ssh/known_hosts
-        - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@{DNS public} "
+        - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@ec2-13-39-243-212.eu-west-3.compute.amazonaws.com "
           sudo apt-get update &&
           sudo apt-get install -y docker.io &&
           sudo echo $REGISTRY_USER && echo $REGISTRY_PASS &&
@@ -237,6 +241,6 @@ git remote set-url origin http://gitlab.example.com/root/devops_project.git
 git push --all origin
 ```
 
-When your pipeline has finished executing, connect to: {public IPv4 address of the EC2 VM}:5000
+When your pipeline has finished executing, connect to: 13.39.243.212:5000
 
 ***The configuration steps need to be done once since you don't destroy the VM***
