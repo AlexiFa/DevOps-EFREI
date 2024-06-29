@@ -107,6 +107,10 @@ You will need to create an EC2 VM in AWS to deploy the web application.
 
 ![gds](../images/gsp.png)
 
+### Setup Discord
+
+To be notify either when your pipeline is well executed or when it crashed, you have to setup a webhook in a discord server. So go in your discord server then go in the server setting, click on "Integration" then create and configure your new webhook and copy its webhook url.
+
 ### Setup variables
 
 Then in your GitLab, you will need to go to the settings of your CI/CD, then into 'Variables', and add the following variables:
@@ -114,6 +118,7 @@ Then in your GitLab, you will need to go to the settings of your CI/CD, then int
 - ```REGISTRY_PASS``` where you will put your Docker Hub password
 - ```REGISTRY_USER``` where you will put your Docker Hub username
 - ```SSH_PRIVATE_KEY``` where you will put your EC2 VM's SSH private key
+- ```DISCORD_WEBHOOK_URL``` where you will put your webhook url
 
 ### Setup .gitlab-ci.yml
 
@@ -133,6 +138,7 @@ stages:
     - test
     - build
     - deploy
+    - notify
 
 run_test:
     stage: test
@@ -177,6 +183,26 @@ deploy:
           sudo docker ps -aq | xargs -r sudo docker stop &&
           sudo docker ps -aq | xargs -r sudo docker rm &&
           sudo docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
+
+notify_success:
+    stage: notify
+    tags:
+        - shellapp
+    script:
+        - echo $DISCORD_WEBHOOK_URL
+        - >
+            curl -H "Content-Type: application/json" -X POST -d '{"username": "DevOps Bot", "content": "Group 2 your pipeline ran well and your deployment was successful"}' $DISCORD_WEBHOOK_URL
+    when: on_success
+
+notify_failure:
+    stage: notify
+    tags:
+        - shellapp
+    script:
+        - echo $DISCORD_WEBHOOK_URL
+        - >
+            curl -H "Content-Type: application/json" -X POST -d '{"username": "DevOps Bot", "content": "Group 2 your pipeline sucked it didnt run"}' $DISCORD_WEBHOOK_URL
+    when: on_failure
 ```
 
 modify requirements.txt
