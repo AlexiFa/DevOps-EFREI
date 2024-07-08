@@ -8,6 +8,7 @@ stages:
     - test
     - build
     - deploy
+    - notify
 
 run_test:
     stage: test
@@ -54,3 +55,23 @@ deploy:
           sudo docker ps -aq | xargs -r sudo docker stop &&
           sudo docker ps -aq | xargs -r sudo docker rm &&
           sudo docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
+
+notify_success:
+    stage: notify
+    tags:
+        - shellapp
+    script:
+        - echo $DISCORD_WEBHOOK_URL
+        - >
+            curl -H "Content-Type: application/json" -X POST -d '{"username": "DevOps Bot", "content": "Group 2 your pipeline ran well and your deployment was successful"}' $DISCORD_WEBHOOK_URL
+    when: on_success
+
+notify_failure:
+    stage: notify
+    tags:
+        - shellapp
+    script:
+        - echo $DISCORD_WEBHOOK_URL
+        - >
+            curl -H "Content-Type: application/json" -X POST -d '{"username": "DevOps Bot", "content": "Group 2 your pipeline sucked it didnt run"}' $DISCORD_WEBHOOK_URL
+    when: on_failure

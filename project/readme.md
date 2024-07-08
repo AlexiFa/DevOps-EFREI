@@ -21,11 +21,16 @@ The VM will do some configurations for you so you can go take a coffee and come 
 
 Wait for the gitlab to boot on <http://localhost:8080/> (it may take a few minutesn up to 10 minutes on my computer) (if it takes too much time and you have a good compute power, you can increase the resources allocated to the VM in the Vagrantfile)
 
+### Setup Discord
+
+To be notify either when your pipeline is well executed or when it crashed, you have to setup a webhook in a discord server. So go in your discord server then go in the server setting, click on "Integration" then create and configure your new webhook and copy its webhook url.
+
 ### Setup variables
 
 Before running the setup script that will trigger the pipeline, in your GitLab, you will need to go to the settings of your CI/CD, then into 'Variables', and add the following variables:
 
 - ```SSH_PRIVATE_KEY``` where you will put your EC2 VM's SSH private key
+- ```DISCORD_WEBHOOK_URL``` where you will put your webhook url
 
 ### Setup script
 
