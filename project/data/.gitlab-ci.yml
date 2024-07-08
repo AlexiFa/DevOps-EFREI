@@ -1,0 +1,56 @@
+variables:
+    IMAGE_NAME: gtlbdev/devops-project
+    IMAGE_TAG: pythonapp-1.1
+    REGISTRY_USER: gtlbdev
+    REGISTRY_PASS: passwdEFREIproject
+
+stages:
+    - test
+    - build
+    - deploy
+
+run_test:
+    stage: test
+    tags:
+        - pythonapp
+    before_script:
+        - apt-get update && apt-get install -y make
+    script:
+        - make test
+
+build_image:
+    stage: build
+    services:
+        - name: docker:26.1-dind
+          alias: docker
+    tags:
+        - dockerapp
+    variables:
+        DOCKER_HOST: tcp://docker:2375
+        DOCKER_TLS_CERTDIR: ""
+    before_script:
+        - docker info
+        - echo "$REGISTRY_PASS" | docker login --username "$REGISTRY_USER" --password-stdin
+    script:
+        - docker build . -t $IMAGE_NAME:$IMAGE_TAG
+        - docker push $IMAGE_NAME:$IMAGE_TAG
+
+deploy:
+    stage: deploy
+    tags:
+        - shellapp
+    script:
+        - mkdir -p ~/.ssh
+        - touch ~/.ssh/id_rsa
+        - echo "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa 
+        - chmod 600 ~/.ssh/id_rsa
+        - ssh-keyscan -H ec2-13-39-243-212.eu-west-3.compute.amazonaws.com >> ~/.ssh/known_hosts
+        - chmod 644 ~/.ssh/known_hosts
+        - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@ec2-13-39-243-212.eu-west-3.compute.amazonaws.com "
+          sudo apt-get update &&
+          sudo apt-get install -y docker.io &&
+          sudo echo $REGISTRY_USER && echo $REGISTRY_PASS &&
+          echo $REGISTRY_PASS | sudo docker login -u $REGISTRY_USER --password-stdin &&
+          sudo docker ps -aq | xargs -r sudo docker stop &&
+          sudo docker ps -aq | xargs -r sudo docker rm &&
+          sudo docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"

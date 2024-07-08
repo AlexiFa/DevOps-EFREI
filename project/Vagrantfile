@@ -4,21 +4,57 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "generic/ubuntu2310"
   config.vm.provider "virtualbox" do |vb|
+    # limit memory and cpus (can be removed or modified depending on your compute power)
     vb.memory = "6012"
     vb.cpus = 4
   end
 
-  config.vm.network "forwarded_port", guest: 80, host: 80
+  # forward port 80 from guest to host
+  config.vm.network "forwarded_port", guest: 80, host: 8080
 
+  # share data directory
   config.vm.synced_folder "./data", "/vagrant_data"
 
+  # run shell command after VM is up
   config.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
+
+    # install docker
+    # sudo curl -fsSL https://get.docker.com -o get-docker.sh
     sudo wget -O get-docker.sh https://get.docker.com/
     sudo sh get-docker.sh
+    
+    # create gitlab data directory
     sudo mkdir -p /srv/gitlab
-    # sudo mkdir -p /srv/gitlab-runner
-    # cd /vagrant_data
-    # sudo docker compose up -d
+    
+    # create gitlab and runner containers
+    cd /vagrant_data
+    # sudo docker pull gitlab/gitlab-ee:latest
+    # sudo docker pull gitlab/gitlab-runner:latest
+    sudo docker compose pull
+    sudo docker compose up -d
+
+    # create docker network for gitlab and runner
+    sudo docker network create gitlab_default
+
+    # clone the project to be tested (and make changes for the tests)
+    # TODO : change the location of the clone
+    git clone https://github.com/benc-uk/python-demoapp.git
+
+    # move the gitlab-ci into the repo and the Dockerfile to build
+    sudo cp /vagrant_data/.gitlab-ci.yml /vagrant_data/python-demoapp/.gitlab-ci.yml
+    sudo mv /vagrant_data/python-demoapp/build/Dockerfile /vagrant_data/python-demoapp/
+
+    # modify the requirements.txt to update the versions
+    sudo echo "Flask>=2.2.2" > /vagrant_data/python-demoapp/src/requirements.txt
+    sudo echo "py-cpuinfo==7.0.0" >> /vagrant_data/python-demoapp/src/requirements.txt
+    sudo echo "psutil==5.8.0" >> /vagrant_data/python-demoapp/src/requirements.txt
+    sudo echo "gunicorn==20.1.0" >> /vagrant_data/python-demoapp/src/requirements.txt
+    sudo echo "black==20.8b1" >> /vagrant_data/python-demoapp/src/requirements.txt
+    sudo echo "flake8==3.9.0" >> /vagrant_data/python-demoapp/src/requirements.txt
+    sudo echo "pytest==6.2.2" >> /vagrant_data/python-demoapp/src/requirements.txt
+    sudo echo "jinja2<3.1.0" >> /vagrant_data/python-demoapp/src/requirements.txt 
+
+    sudo echo "10.0.2.15 gitlab.example.com" >> /etc/hosts
   SHELL
 end
