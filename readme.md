@@ -1,4 +1,4 @@
-# DevOps Labs and Project
+# DevOps Labs and Project TEAM 2
 
 ## Requirments
 

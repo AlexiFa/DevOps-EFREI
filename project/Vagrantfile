@@ -42,7 +42,6 @@ Vagrant.configure("2") do |config|
     git clone https://github.com/benc-uk/python-demoapp.git
 
     # move the gitlab-ci into the repo and the Dockerfile to build
-    sudo cp /vagrant_data/.gitlab-ci.yml /vagrant_data/python-demoapp/.gitlab-ci.yml
     sudo mv /vagrant_data/python-demoapp/build/Dockerfile /vagrant_data/python-demoapp/
 
     # modify the requirements.txt to update the versions
