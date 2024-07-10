@@ -64,12 +64,12 @@ sp.run(shlex.split(f'git push --all origin'), cwd='/vagrant_data/python-demoapp'
 
 sp.run(shlex.split(f'cp /vagrant_data/.gitlab-ci.yml /vagrant_data/python-demoapp/.gitlab-ci.yml'), cwd='/vagrant_data/python-demoapp')
 
-print('Setup varibles')
+print('\nSetup varibles')
 print('got to your new project -> settings -> CI CD settings -> variables')
 print('add the following variables:')
-print('SSH_PRIVATE_KEY: go to the readme and copy the private key')
+print('\nSSH_PRIVATE_KEY: go to the readme and copy the private key')
 print('DISCORD_WEBHOOK: the webhook url for the discord channel that you copied before')
-input('Press enter when you are done')
+input('\nPress enter when you are done')
 
 print('add new files')
 sp.run(shlex.split(f'git add .'), cwd='/vagrant_data/python-demoapp')
@@ -84,4 +84,4 @@ print(f"\nRemider of the gitlab root password: {res}\n")
 print('push pipeline')
 sp.run(shlex.split(f'git push'), cwd='/vagrant_data/python-demoapp') # login and password
 
-print('You can now access the gitlab at http://localhost:8080 to see the pipeline in action')
+print('\nYou can now access the gitlab at http://localhost:8080 to see the pipeline in action')
