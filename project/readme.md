@@ -39,7 +39,11 @@ Login into gitlab with ```root``` and the password given by the script.
 
 Go to the 'Admin area -> CI/CD -> Runners' and copy the token.
 
+![token](../images/steps/gitlabtoken.png)
+
 Go to the admin profile (Click on your profile picture -> edit profile -> emails) and copy the email into the setup prompt given by the script.
+
+![email](../images/steps/gitlabcopyemail.png)
 
 #### Setup variables
 
@@ -49,6 +53,12 @@ Before continuing the setup script that will trigger the pipeline, in your GitLa
 
 - ```SSH_PRIVATE_KEY``` where you will put your EC2 VM's SSH private key
 - ```DISCORD_WEBHOOK_URL``` where you will put your webhook url
+
+![addvar](../images/steps/gitlabaddvar.png)
+
+Warrning: The SSH key must be in file format in the variables.
+
+![fileformat](../images/steps/gitlabfileformat.png)
 
 Here is the rsa key of the EC2 VM used to deploy the web application
 
