@@ -12,7 +12,7 @@ Objectives file :
 Start VM (before doing that, if you have a good compute power, you can increase the amount of memory allocated in the Vagrantfile because the VM is laggy)
 
 ```bash
-cd Project
+cd project
 vagrant up # up to 20 minutes (on my computer)
 vagrant ssh
 ```
