@@ -109,6 +109,10 @@ If you want to run your own app you will need to create an EC2 VM in AWS to depl
 
 ### Final result
 
+At the end, you will see in your discord server the result of the pipeline.
+
+![discord](../images/discordBot.png)
+
 When your pipeline has finished executing, connect to: 13.39.243.212:5000
 
 ***The configuration steps need to be done once since you don't destroy the VM***
